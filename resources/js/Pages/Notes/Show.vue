@@ -19,8 +19,10 @@
                     <div class="md:col-span-2 mt-5 md:mt-0">
                         <div class="shadow bg-white md:redounded-md p-4">
                             <p>{{ note.content }}</p>
-                            <hr class="my-6">
-                            <Link :href="route('notes.index')">Volver</Link>
+                            <hr class="mt-6">
+                            <div class="mt-5">
+                                <Link :href="route('notes.index')">Volver</Link>
+                            </div>
                         </div>
                     </div>
                 </div>
