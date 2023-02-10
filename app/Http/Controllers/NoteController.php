@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Inertia\Inertia;
 
 class NoteController extends Controller
@@ -13,10 +14,12 @@ class NoteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return Inertia::render('Notes/Index', [
-            'notes' => Note::latest()->get(),
+            'notes' => Note::latest()
+                ->where('excerpt', 'like', '%' . $request->q . '%')
+                ->get(),
         ]);
     }
 
@@ -48,7 +51,7 @@ class NoteController extends Controller
 
         $note = Note::create($request->all());
 
-        return redirect()->route('notes.edit', $note->id);
+        return redirect()->route('notes.edit', $note->id)->with('status', 'Note created!');
     }
 
     /**
@@ -90,7 +93,7 @@ class NoteController extends Controller
         ]);
         $note->update($request->all());
 
-        return redirect()->route('notes.index');
+        return redirect()->route('notes.index')->with('status', 'Note updated!');
     }
 
     /**
@@ -102,6 +105,6 @@ class NoteController extends Controller
     public function destroy(Note $note)
     {
         $note->delete();
-        return redirect()->route('notes.index');
+        return redirect()->route('notes.index')->with('status', 'Note deleted!');
     }
 }
